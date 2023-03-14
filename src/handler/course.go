@@ -26,3 +26,59 @@ func AddNewCourse(c *gin.Context) {
 
 	c.JSON(http.StatusOK, co)
 }
+
+func UpdateCourseInfo(c *gin.Context) {
+	//Note: Cannot update course-code because it is a primary key.
+	//Any case where it'll be needed to update course-code, you'll need to delete and
+	//recreate that course with the accurate/updated coursecode
+	id := c.Param("course-code")
+
+	course, db := models.GetCourseByID(id)
+
+	var courseUpdate models.Course
+
+	utils.BindCourse(&courseUpdate, c)
+
+	if course.CourseCode != id {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "course not found",
+		})
+		return
+	}
+
+	if courseUpdate.CourseCode != "" {
+		course.CourseCode = courseUpdate.CourseCode
+	}
+
+	if courseUpdate.CourseTitle != "" {
+		course.CourseTitle = courseUpdate.CourseTitle
+	}
+
+	db.Save(course)
+
+	c.JSON(http.StatusOK, course)
+}
+
+func ListAllCourses(c *gin.Context) {
+	course := models.ListAllCourses()
+	c.JSON(http.StatusOK, course)
+}
+
+func DeleteCourse(c *gin.Context) {
+	id := c.Param("course-code")
+
+	course, _ := models.GetCourseByID(id)
+
+	models.DeleteCourse(id)
+
+	if course.CourseCode != id {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "course not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "course deleted successfully",
+	})
+}
