@@ -13,7 +13,7 @@ import (
 func EnrolStudent(c *gin.Context) {
 	student := &models.Student{}
 
-	utils.BindJSON(student, c)
+	utils.BindStudent(student, c)
 	id := xid.New()
 	student.StudentID = "STU-" + strconv.Itoa(id.Time().Year()) + "-" + strconv.Itoa(int(id.Counter()))
 
@@ -29,7 +29,7 @@ func UpdateStudentInfo(c *gin.Context) {
 
 	var studentUpdate models.Student
 
-	utils.BindJSON(&studentUpdate, c)
+	utils.BindStudent(&studentUpdate, c)
 
 	if student.StudentID != id {
 		c.JSON(http.StatusNotFound, gin.H{
