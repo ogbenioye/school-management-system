@@ -7,11 +7,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/rs/xid"
 )
-
-var db *gorm.DB
 
 func EnrolStudent(c *gin.Context) {
 	student := &models.Student{}
@@ -19,7 +16,6 @@ func EnrolStudent(c *gin.Context) {
 	utils.BindJSON(student, c)
 	id := xid.New()
 	student.StudentID = "STU-" + strconv.Itoa(id.Time().Year()) + "-" + strconv.Itoa(int(id.Counter()))
-	// student.CreatedAt = time.Now()
 
 	s := student.EnrollStudent()
 
@@ -35,12 +31,12 @@ func UpdateStudentInfo(c *gin.Context) {
 
 	utils.BindJSON(&studentUpdate, c)
 
-	// if studentUpdate.StudentID == "" {
-	// 	c.JSON(http.StatusNotFound, gin.H{
-	// 		"error": "student not found",
-	// 	})
-	// 	return
-	// }
+	if student.StudentID != id {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "student not found",
+		})
+		return
+	}
 
 	if studentUpdate.FirstName != "" {
 		student.FirstName = studentUpdate.FirstName
@@ -57,6 +53,7 @@ func UpdateStudentInfo(c *gin.Context) {
 	if studentUpdate.Department != "" {
 		student.Department = studentUpdate.Department
 	}
+
 	db.Save(student)
 
 	c.JSON(http.StatusOK, student)
