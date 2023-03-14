@@ -63,3 +63,22 @@ func ListAllStudents(c *gin.Context) {
 	student := models.ListAllStudents()
 	c.JSON(http.StatusOK, student)
 }
+
+func DisenrollStudent(c *gin.Context) {
+	id := c.Param("student-id")
+
+	student, _ := models.GetStudentByID(id)
+
+	models.DisenrollStudent(id)
+
+	if student.StudentID != id {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "student not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Student disenrolled successfully",
+	})
+}
