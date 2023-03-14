@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"school-management-system/src/router"
+	"school-management-system/src/setup"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("push develop branch")
+	setup.Connection()
+
+	r := gin.Default()
+	router.RegisterStudentRoutes(r)
+	r.Run(":8080")
 }

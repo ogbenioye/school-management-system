@@ -6,11 +6,12 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var db *gorm.DB
+// var db *gorm.DB
 
 type Course struct {
-	CourseCode  string `gorm:"index:,unique"`
-	CourseTitle string `json:"courseTitle"`
+	CourseCode  string    `gorm:"primary_key"`
+	CourseTitle string    `json:"courseTitle"`
+	Students    []Student `gorm:"many2many:student_courses;"`
 }
 
 func init() {
