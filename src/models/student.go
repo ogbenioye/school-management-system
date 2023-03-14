@@ -10,15 +10,15 @@ import (
 var db *gorm.DB
 
 type Student struct {
-	StudentID     string   `gorm:"primary_key"`
-	FirstName     string   `json:"firstName"`
-	LastName      string   `json:"lastName"`
-	Gender        string   `json:"gender"`
-	Department    string   `json:"dept"`
-	Courses       []Course `gorm:"many2many:student_courses;" json:"courses"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DisenrolledAt *time.Time `sql:"index"`
+	StudentID  string   `gorm:"primary_key"`
+	FirstName  string   `json:"firstName"`
+	LastName   string   `json:"lastName"`
+	Gender     string   `json:"gender"`
+	Department string   `json:"dept"`
+	Courses    []Course `gorm:"many2many:student_courses;" json:"courses"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  *time.Time `sql:"index"`
 }
 
 func init() {
@@ -41,7 +41,7 @@ func GetStudentByID(Id string) (*Student, *gorm.DB) {
 
 func DisenrollStudent(Id string) Student {
 	var student Student
-	db.Where("StudentID=?", Id).Delete(student)
+	db.Where("Student_ID=?", Id).Delete(student)
 	return student
 }
 
