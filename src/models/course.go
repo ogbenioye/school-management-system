@@ -2,16 +2,18 @@ package models
 
 import (
 	"school-management-system/src/setup"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
 
-// var db *gorm.DB
-
 type Course struct {
-	CourseCode  string    `gorm:"primary_key"`
+	CourseCode  string    `gorm:"primary_key" json:"code"`
 	CourseTitle string    `json:"courseTitle"`
 	Students    []Student `gorm:"many2many:student_courses;"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time `sql:"index"`
 }
 
 func init() {
@@ -28,13 +30,13 @@ func (c *Course) AddCourse() *Course {
 
 func GetCourseByID(Id string) (*Course, *gorm.DB) {
 	var course Course
-	db.Where("CourseCode=?", Id).Find(&course)
+	db.Where("Course_Code=?", Id).Find(&course)
 	return &course, db
 }
 
 func DeleteCourse(Id string) Course {
 	var course Course
-	db.Where("CourseCode=?", Id).Delete(course)
+	db.Where("Course_Code=?", Id).Delete(course)
 	return course
 }
 
