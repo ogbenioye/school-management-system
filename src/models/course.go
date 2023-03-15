@@ -18,30 +18,30 @@ type Course struct {
 
 func init() {
 	setup.Connection()
-	db = setup.GetDB()
-	db.AutoMigrate(&Course{})
+	DB = setup.GetDB()
+	DB.AutoMigrate(&Course{})
 }
 
 func (c *Course) AddCourse() *Course {
-	db.NewRecord(c)
-	db.Create(c)
+	DB.NewRecord(c)
+	DB.Create(c)
 	return c
 }
 
 func GetCourseByID(Id string) (*Course, *gorm.DB) {
 	var course Course
-	db.Where("Course_Code=?", Id).Find(&course)
-	return &course, db
+	DB.Where("Course_Code=?", Id).Find(&course)
+	return &course, DB
 }
 
 func DeleteCourse(Id string) Course {
 	var course Course
-	db.Where("Course_Code=?", Id).Delete(course)
+	DB.Where("Course_Code=?", Id).Delete(course)
 	return course
 }
 
 func ListAllCourses() []Course {
 	var Courses []Course
-	db.Find(&Courses)
+	DB.Find(&Courses)
 	return Courses
 }

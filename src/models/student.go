@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 type Student struct {
 	StudentID  string   `gorm:"primary_key"`
@@ -23,30 +23,30 @@ type Student struct {
 
 func init() {
 	setup.Connection()
-	db = setup.GetDB()
-	db.AutoMigrate(&Student{})
+	DB = setup.GetDB()
+	DB.AutoMigrate(&Student{})
 }
 
 func (s *Student) EnrollStudent() *Student {
-	db.NewRecord(s)
-	db.Create(&s)
+	DB.NewRecord(s)
+	DB.Create(&s)
 	return s
 }
 
 func GetStudentByID(Id string) (*Student, *gorm.DB) {
 	var student Student
-	db.Where("Student_ID=?", Id).Find(&student)
-	return &student, db
+	DB.Where("Student_ID=?", Id).Find(&student)
+	return &student, DB
 }
 
 func DisenrollStudent(Id string) Student {
 	var student Student
-	db.Where("Student_ID=?", Id).Delete(student)
+	DB.Where("Student_ID=?", Id).Delete(student)
 	return student
 }
 
 func ListAllStudents() []Student {
 	var Students []Student
-	db.Find(&Students)
+	DB.Find(&Students)
 	return Students
 }
