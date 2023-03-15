@@ -11,11 +11,23 @@ import (
 )
 
 func EnrolStudent(c *gin.Context) {
+	var courses []models.Course
+	var courseCodes []string
 	student := &models.Student{}
 
 	utils.BindStudent(student, c)
+
 	id := xid.New()
 	student.StudentID = "STU-" + strconv.Itoa(id.Time().Year()) + "-" + strconv.Itoa(int(id.Counter()))
+
+	//Appending course-codes from the request into a slice
+	for i := 0; i < len(student.Courses); i++ {
+		courseCodes = append(courseCodes, student.Courses[i].CourseCode)
+	}
+
+	//Adding existing course data into the new student being created
+	models.DB.Find(&courses, courseCodes)
+	student.Courses = courses
 
 	s := student.EnrollStudent()
 
