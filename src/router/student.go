@@ -7,8 +7,8 @@ import (
 )
 
 var RegisterStudentRoutes = func(router *gin.Engine) {
-	router.POST("/sms", handler.EnrolStudent)
-	router.PUT("/sms/:student-id", handler.UpdateStudentInfo)
-	router.GET("/sms", handler.ListAllStudents)
-	router.DELETE("/sms/:student-id", handler.DisenrollStudent)
+	router.POST("/sms/student", handler.EnrolStudent)
+	router.PUT("/sms/student/:student-id", handler.UpdateStudentInfo)
+	router.GET("/sms/student", handler.ListAllStudents)
+	router.DELETE("/sms/student/:student-id", handler.DisenrollStudent)
 }
