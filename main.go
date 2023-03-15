@@ -13,5 +13,6 @@ func main() {
 	r := gin.Default()
 	router.RegisterStudentRoutes(r)
 	router.RegisterCourseRoutes(r)
+	router.RegisterSchoolRoutes(r)
 	r.Run(":8080")
 }
