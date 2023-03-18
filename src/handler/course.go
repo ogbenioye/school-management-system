@@ -47,7 +47,10 @@ func UpdateCourseInfo(c *gin.Context) {
 	}
 
 	if courseUpdate.CourseCode != "" {
-		course.CourseCode = courseUpdate.CourseCode
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": "cannot update course-code field, delete course and re-register course with correct information",
+		})
+		return
 	}
 
 	if courseUpdate.CourseTitle != "" {
@@ -69,14 +72,14 @@ func DeleteCourse(c *gin.Context) {
 
 	course, _ := models.GetCourseByID(id)
 
-	models.DeleteCourse(id)
-
 	if course.CourseCode != id {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "course not found",
 		})
 		return
 	}
+
+	models.DeleteCourse(id)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "course deleted successfully",

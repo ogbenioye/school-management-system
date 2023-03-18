@@ -20,8 +20,17 @@ func EnrolStudent(c *gin.Context) {
 	id := xid.New()
 	student.StudentID = "STU-" + strconv.Itoa(id.Time().Year()) + "-" + strconv.Itoa(int(id.Counter()))
 
-	//Appending course-codes from the request into a slice
+	var course models.Course
+
+	//Appending course-codes/id from the request into a slice
 	for i := 0; i < len(student.Courses); i++ {
+		models.DB.Where("Course_Code=?", student.Courses[i].CourseCode).First(&course)
+		if course.CourseCode == "" {
+			c.JSON(403, gin.H{
+				"error": "Invalid Course: register " + student.Courses[i].CourseCode + " first",
+			})
+			return
+		}
 		courseCodes = append(courseCodes, student.Courses[i].CourseCode)
 	}
 
@@ -81,14 +90,14 @@ func DisenrollStudent(c *gin.Context) {
 
 	student, _ := models.GetStudentByID(id)
 
-	models.DisenrollStudent(id)
-
 	if student.StudentID != id {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "student not found",
 		})
 		return
 	}
+
+	models.DisenrollStudent(id)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Student disenrolled successfully",
