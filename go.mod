@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/jinzhu/gorm v1.9.16
+	github.com/rs/xid v1.4.0
 )
 
 require (

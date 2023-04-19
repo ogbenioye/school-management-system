@@ -7,44 +7,46 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var DB *gorm.DB
+
 type Student struct {
-	FirstName     string   `json:"firstName"`
-	LastName      string   `json:"lastName"`
-	StudentID     string   `gorm:"index:,unique" json:"studentId"`
-	Gender        string   `json:"gender"`
-	Department    string   `json:"dept"`
-	Courses       []Course `gorm:"many2many:student_courses;foreignKey:StudentID" json:"courses"`
-	EnrolledAt    time.Time
-	LastUpdate    time.Time
-	DisenrolledAt *time.Time `sql:"index"`
+	StudentID  string   `gorm:"primary_key"`
+	FirstName  string   `json:"firstName"`
+	LastName   string   `json:"lastName"`
+	Gender     string   `json:"gender"`
+	Department string   `json:"dept"`
+	Courses    []Course `gorm:"many2many:student_courses;" json:"courses"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  *time.Time `sql:"index"`
 }
 
 func init() {
 	setup.Connection()
-	db = setup.GetDB()
-	db.AutoMigrate(&Student{})
+	DB = setup.GetDB()
+	DB.AutoMigrate(&Student{})
 }
 
-func (s *Student) EnrolStudent() *Student {
-	db.NewRecord(s)
-	db.Create(&s)
+func (s *Student) EnrollStudent() *Student {
+	DB.NewRecord(s)
+	DB.Create(&s)
 	return s
 }
 
 func GetStudentByID(Id string) (*Student, *gorm.DB) {
 	var student Student
-	db.Where("StudentID=?", Id).Find(&student)
-	return &student, db
+	DB.Where("Student_ID=?", Id).Find(&student)
+	return &student, DB
 }
 
 func DisenrollStudent(Id string) Student {
 	var student Student
-	db.Where("StudentID=?", Id).Delete(student)
+	DB.Where("Student_ID=?", Id).Delete(student)
 	return student
 }
 
 func ListAllStudents() []Student {
 	var Students []Student
-	db.Find(&Students)
+	DB.Find(&Students)
 	return Students
 }

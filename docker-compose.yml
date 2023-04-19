@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  sms-api:
+    build: .
+    container_name: sch-management
+    volumes:
+      - .:/go/src/sch-management
+    ports:
+     - "5500:8080"
+    networks:
+      - sms-app
+
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    tty: true
+    container_name: sms-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - .:/var/lib
+    environment:
+      MYSQL_DATABASE: sms-mysql
+      MYSQL_PASSWORD: my_secret
+      MYSQL_ROOT_PASSWORD: my_secret
+    networks:
+      - sms-app
+
+networks:
+  sms-app:
+    external: true
